@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: api-gateway-server
+  profiles:
+    active: local          # 로컬 비밀값은 application-local.yaml 에서 로드
+  datasource:
+    url: jdbc:mysql://localhost:3306/api_gateway_db?useSSL=false&serverTimezone=UTC&characterEncoding=UTF-8
+    username: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update   # 첫 실행 후 update로 변경예정
+      show-sql: true       # 실행되는 SQL을 콘솔에 출력
+      properties:
+      hibernate:
+      format_sql: true # SQL 예쁘게 출력
+server:
+  port: 8080
+jwt:
+  expiration: 3600000   # 밀리초 단위 (1시간)
