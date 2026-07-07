@@ -1,6 +1,7 @@
 package com.yam.apigateway.interceptor;
 
 import com.yam.apigateway.entity.ApiKey;
+import com.yam.apigateway.exception.ApiKeyNotFoundException;
 import com.yam.apigateway.repository.ApiKeyRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -25,14 +26,6 @@ public class ApiKeyInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        Optional<ApiKey> findApiKey = apiKeyRepository.findApiKeyByKeyValue(apiKey);
-        // 엥 값이 없을 수도 있어서 Optional객체 사용
-        if(findApiKey.isEmpty() || !findApiKey.get().isActive()) {
-            response.setStatus(401);
-            return false;
-        } else {
-
-            return true;
-        }
+        return apiKeyRepository.findApiKeyByKeyValue(apiKey).orElseThrow(() -> new ApiKeyNotFoundException("유효하지 않은 키")).isActive();
     }
 }

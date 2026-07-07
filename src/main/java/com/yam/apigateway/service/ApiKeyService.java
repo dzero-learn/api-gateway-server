@@ -1,9 +1,12 @@
 package com.yam.apigateway.service;
 
 import com.yam.apigateway.entity.ApiKey;
+import com.yam.apigateway.exception.ApiKeyNotFoundException;
+import com.yam.apigateway.exception.GlobalExceptionHandler;
 import com.yam.apigateway.repository.ApiKeyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
@@ -15,6 +18,7 @@ public class ApiKeyService {
     private final ApiKeyRepository apiKeyRepository;
     private static final SecureRandom secureRandom = new SecureRandom();
 
+    @ExceptionHandler(GlobalExceptionHandler.class)
     public ApiKey createApiKey(String appName) {
         // api 키 생성
         byte[] buffer = new byte[32]; // 32바이트=256비트 배열
