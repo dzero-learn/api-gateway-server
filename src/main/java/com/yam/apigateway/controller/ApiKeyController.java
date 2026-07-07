@@ -4,8 +4,6 @@ import com.yam.apigateway.common.ApiResponse;
 import com.yam.apigateway.dto.ApiKeyRequest;
 import com.yam.apigateway.dto.ApiKeyResponse;
 import com.yam.apigateway.entity.ApiKey;
-import com.yam.apigateway.exception.ApiKeyNotFoundException;
-import com.yam.apigateway.exception.GlobalExceptionHandler;
 import com.yam.apigateway.service.ApiKeyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
