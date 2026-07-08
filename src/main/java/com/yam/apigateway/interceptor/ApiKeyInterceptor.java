@@ -9,9 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import java.util.List;
-import java.util.Optional;
-
 @Component
 @RequiredArgsConstructor
 public class ApiKeyInterceptor implements HandlerInterceptor {
@@ -21,11 +18,13 @@ public class ApiKeyInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String apiKey = request.getHeader("X-API-Key");
         // 1. 헤더 자체가 없으면 차단
-        if (apiKey == null) {
-            response.setStatus(401);
-            return false;
-        }
+        if (apiKey == null)
+            throw new ApiKeyNotFoundException("헤더에 키 없음.");
 
-        return apiKeyRepository.findApiKeyByKeyValue(apiKey).orElseThrow(() -> new ApiKeyNotFoundException("유효하지 않은 키")).isActive();
+        ApiKey foundKey = apiKeyRepository.findApiKeyByKeyValue(apiKey).orElseThrow(() -> new ApiKeyNotFoundException("유효하지 않은 키."));
+        if(!foundKey.isActive())
+            throw new ApiKeyNotFoundException("비활성화 키.");
+
+        return true;
     }
 }
