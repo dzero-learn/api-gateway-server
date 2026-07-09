@@ -9,20 +9,20 @@ import com.yam.apigateway.exception.LoginFailException;
 import com.yam.apigateway.repository.UserRepository;
 import com.yam.apigateway.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
 public class AuthService {
     private final JwtUtil jwtUtil;
-    private static final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
     public LoginResponse loginCheck(LoginRequest request) {
         User user = userRepository.findByUsername(request.getUsername()).orElseThrow(LoginFailException::new);
 
-        if (!bCryptPasswordEncoder.matches(request.getPassword(), user.getPassword()))
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword()))
             throw new LoginFailException();
 
         // 토큰 생성
@@ -32,7 +32,7 @@ public class AuthService {
 
     public UserResponse save(UserRequest request) {
         User user = request.toEntity();
-        user.setPassword(bCryptPasswordEncoder.encode(request.getPassword()));
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         return UserResponse.from(userRepository.save(user));
     }
 }
