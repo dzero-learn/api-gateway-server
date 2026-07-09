@@ -20,7 +20,7 @@ public class AuthService {
     private final UserRepository userRepository;
 
     public LoginResponse loginCheck(LoginRequest request) {
-        User user = userRepository.findUsersByUsername(request.getUsername()).orElseThrow(LoginFailException::new);
+        User user = userRepository.findByUsername(request.getUsername()).orElseThrow(LoginFailException::new);
 
         if (!bCryptPasswordEncoder.matches(request.getPassword(), user.getPassword()))
             throw new LoginFailException();
